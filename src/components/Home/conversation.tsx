@@ -3,15 +3,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { MessageSeenSvg } from "@/lib/svgs";
 import { ImageIcon, Users, VideoIcon } from "lucide-react";
 import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 // import { api } from "../../../convex/_generated/api";
 // import { useConversationStore } from "@/app/store/chat-store";
 
 const Conversation = ({ conversation }: { conversation: any }) => {
+  console.log({ conversation });
   const conversationImage = conversation.groupImage || conversation.image;
   const conversationName = conversation.groupName || conversation.name;
   const lastMessage = conversation.lastMessage;
   const lastMessageType = lastMessage?.messageType;
-  const me = "1234";
+  const me = useQuery(api.users.getMe);
 
   // const { setSelectedConversation, selectedConversation } =
   //   useConversationStore();

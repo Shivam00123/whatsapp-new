@@ -11,10 +11,15 @@ import { conversations } from "@/app/dummy-data/db";
 import Conversation from "./conversation";
 import { UserButton } from "@clerk/nextjs";
 import UserListDialog from "./user-list-dialog";
-import { Authenticated } from "convex/react";
+import { Authenticated, useConvexAuth, useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 const LeftPanel = () => {
-  // const conversations = [];
+  const { isAuthenticated } = useConvexAuth();
+  const conversations = useQuery(
+    api.conversations.getConversations,
+    isAuthenticated ? undefined : "skip"
+  );
 
   return (
     <div className="w-1/4 border-gray-600 border-r">

@@ -92,7 +92,7 @@ export const getUsers = query({
 
 export const getMe = query({
   args: {},
-  handler: async (ctx, args) => {
+  handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new ConvexError("Unauthorized");
@@ -101,7 +101,10 @@ export const getMe = query({
     const user = await ctx.db
       .query("users")
       .withIndex("by_tokenIdentifier", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+        q.eq(
+          "tokenIdentifier",
+          identity.tokenIdentifier.replace("https://", "")
+        )
       )
       .unique();
 

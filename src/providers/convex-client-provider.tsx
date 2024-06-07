@@ -12,6 +12,7 @@ export default function ConvexClientProvider({
   children: ReactNode;
 }) {
   //   return ;
+
   return (
     <ClerkProvider
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}

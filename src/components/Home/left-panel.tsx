@@ -10,6 +10,8 @@ import ThemeSwitch from "./theme-switch";
 import { conversations } from "@/app/dummy-data/db";
 import Conversation from "./conversation";
 import { UserButton } from "@clerk/nextjs";
+import UserListDialog from "./user-list-dialog";
+import { Authenticated } from "convex/react";
 
 const LeftPanel = () => {
   // const conversations = [];
@@ -22,7 +24,9 @@ const LeftPanel = () => {
           {/* <User size={24} /> */}
           <UserButton />
           <div className="flex items-center gap-3">
-            <MessageSquareDiff size={20} />{" "}
+            <Authenticated>
+              <UserListDialog />
+            </Authenticated>
             {/* TODO: This line will be replaced with <UserListDialog /> */}
             <ThemeSwitch />
             <LogOut size={20} className="cursor-pointer" />

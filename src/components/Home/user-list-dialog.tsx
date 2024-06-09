@@ -57,14 +57,15 @@ const UserListDialog = () => {
           body: selectedImage,
         });
         const { storageId } = await result.json();
-        const conversationId = await createConversations({
+        await createConversations({
           participants: [...selectedUsers, me?._id!],
           isGroup,
           groupName,
           groupImage: storageId,
+          admin: me?._id!,
         });
       } else {
-        const conversationId = await createConversations({
+        await createConversations({
           participants: [...selectedUsers, me?._id!],
           isGroup,
           groupName,

@@ -120,3 +120,45 @@ export const getMe = query({
     return user;
   },
 });
+
+export const fetchGroupMembers = query({
+  args: {
+    groupId: v.id("conversations"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new ConvexError("Unauthorized");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_tokenIdentifier", (q) =>
+        q.eq(
+          "tokenIdentifier",
+          identity.tokenIdentifier.replace("https://", "")
+        )
+      )
+      .unique();
+
+    if (!user) {
+      throw new ConvexError("User not found");
+    }
+
+    const members = await ctx.db
+      .query("conversations")
+      .filter((q) => q.eq(q.field("_id"), args.groupId))
+      .take(1);
+
+    const participants = members?.[0]?.participants;
+
+    const membersDetails = await Promise.all(
+      participants?.map(async (participant) => {
+        const userInfo = await ctx.db
+          .query("users")
+          .filter((q) => q.eq(q.field("_id"), participant))
+          .unique();
+        return userInfo;
+      })
+    );
+    return membersDetails;
+  },
+});

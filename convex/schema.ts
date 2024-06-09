@@ -21,7 +21,7 @@ export default defineSchema({
     conversation: v.id("conversations"),
     sender: v.string(),
     content: v.string(),
-    messageTyp: v.union(
+    messageType: v.union(
       v.literal("text"),
       v.literal("image"),
       v.literal("video")

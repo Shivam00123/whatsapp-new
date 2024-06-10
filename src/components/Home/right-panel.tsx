@@ -12,8 +12,6 @@ const RightPanel = () => {
     useConversationStore();
   if (!selectedConversations) return <ChatPlaceHolder />;
 
-  console.log({ selectedConversations });
-
   const conversationName = selectedConversations?.isGroup
     ? selectedConversations.groupName
     : selectedConversations?.name;

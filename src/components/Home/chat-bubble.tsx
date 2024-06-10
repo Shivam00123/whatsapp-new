@@ -7,6 +7,7 @@ import Image from "next/image";
 import ReactPlayer from "react-player";
 import { useState } from "react";
 import ChatAvatarActions from "./chat-avatar-actions";
+import { Bot } from "lucide-react";
 
 type ChatBubbleProps = {
   message: IMessage;
@@ -21,12 +22,19 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
   const minute = date.getMinutes().toString().padStart(2, "0");
   const time = `${hour}:${minute}`;
 
+  console.log({ message });
+
   const { selectedConversations } = useConversationStore();
   const isMember =
     selectedConversations?.participants.includes(message.senderID) || false;
   const isGroup = selectedConversations?.isGroup;
   const fromMe = message.senderID === me._id;
-  const bgClass = fromMe ? "bg-green-chat" : "bg-white dark:bg-gray-primary";
+  const fromChatGPT: boolean = message.senderName === "ChatGPT";
+  const bgClass = fromMe
+    ? "bg-green-chat"
+    : fromChatGPT
+      ? "bg-blue-500 text-white"
+      : "bg-white dark:bg-gray-primary";
 
   if (!fromMe) {
     return (
@@ -38,11 +46,17 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
             isGroup={isGroup}
             isMember={isMember}
             message={message}
+            fromChatGPT={fromChatGPT}
           />
           <div
             className={`flex flex-col z-20 max-w-fit px-2 pt-1 rounded-md shadow-md relative ${bgClass}`}
           >
-            <OtherMessageIndicator />
+            {!fromChatGPT && (
+              <OtherMessageIndicator fromChatGPT={fromChatGPT} />
+            )}
+            {fromChatGPT && (
+              <Bot size={16} className="absolute bottom-[2px] left-2" />
+            )}
             {<ChatAvatarActions message={message} me={me} />}
             <TextMessage message={message} />
             {open && (
@@ -97,8 +111,14 @@ const MessageTime = ({ time, fromMe }: { time: string; fromMe: boolean }) => {
   );
 };
 
-const OtherMessageIndicator = () => (
-  <div className="absolute bg-white dark:bg-gray-primary top-0 -left-[4px] w-3 h-3 rounded-bl-full" />
+interface IOtherMessageIndicator {
+  fromChatGPT: boolean;
+}
+
+const OtherMessageIndicator = ({ fromChatGPT }: IOtherMessageIndicator) => (
+  <div
+    className={`absolute ${fromChatGPT ? "bg-blue-500 text-white" : "bg-white dark:bg-gray-primary"} top-0 -left-[4px] w-3 h-3 rounded-bl-full`}
+  />
 );
 
 const SelfMessageIndicator = () => (

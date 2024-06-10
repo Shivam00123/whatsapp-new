@@ -1,5 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { api, internal } from "./_generated/api";
 
 export const sendTextMessage = mutation({
   args: {
@@ -33,17 +34,25 @@ export const sendTextMessage = mutation({
       throw new ConvexError("Conversation not found");
     }
 
-    if (!conversation.participants.includes(user._id)) {
+    if (!conversation.participants.includes(user?._id)) {
       throw new ConvexError(
         "You are not allowed to send message on this conversation!"
       );
     }
+
     const message = await ctx.db.insert("messages", {
       conversation: args.conversation,
       sender: args.sender,
       content: args.content,
       messageType: "text",
     });
+
+    if (args.content.startsWith("@gpt")) {
+      const res = await ctx.scheduler.runAfter(0, api.openai.chat, {
+        messageBody: args.content,
+        conversation: args.conversation,
+      });
+    }
   },
 });
 
@@ -144,9 +153,9 @@ export const getMessages = query({
             messageType: message.messageType,
           },
           ...{
-            senderID: sender?._id,
+            senderID: sender?._id || "ChatGPT",
             senderEmail: sender?.email,
-            senderName: sender?.name,
+            senderName: sender?.name || message?.sender,
             senderImage: sender?.image,
             senderIsOnline: sender?.isOnline,
           },
@@ -154,5 +163,20 @@ export const getMessages = query({
       })
     );
     return senderDetails;
+  },
+});
+
+export const sendChatGPTMessage = mutation({
+  args: {
+    content: v.string(),
+    conversation: v.id("conversations"),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.insert("messages", {
+      content: args.content,
+      sender: "ChatGPT",
+      messageType: "text",
+      conversation: args.conversation,
+    });
   },
 });

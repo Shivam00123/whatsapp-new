@@ -23,8 +23,6 @@ const GroupMembersDialog = ({ selectedConversations }: TGroupMembersDialog) => {
   });
   const me = useQuery(api.users.getMe);
 
-  console.log(groupMembers, me);
-
   return (
     <Dialog>
       <DialogTrigger>

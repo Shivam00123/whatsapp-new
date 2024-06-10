@@ -30,8 +30,6 @@ const UserListDialog = () => {
   const { selectedConversations, setSelectedConversations } =
     useConversationStore();
 
-  console.log({ selectedConversations });
-
   const createConversations = useMutation(
     api.conversations.createConversations
   );

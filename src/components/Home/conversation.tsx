@@ -20,8 +20,6 @@ const Conversation = ({ conversation }: { conversation: any }) => {
 
   const activeClass = selectedConversations?._id === conversation._id;
 
-  console.log("myyyy", selectedConversations, conversationImage);
-
   return (
     <>
       <div

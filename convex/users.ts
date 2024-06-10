@@ -29,8 +29,6 @@ export const userIsAway = internalMutation({
       )
       .unique();
 
-    console.log("session_ended", user);
-
     if (!user) {
       throw new ConvexError("User not found");
     }
@@ -67,8 +65,6 @@ export const updateUser = internalMutation({
         q.eq("tokenIdentifier", args.tokenIdentifier)
       )
       .unique();
-
-    console.log("session_ended", user);
 
     if (!user) {
       throw new ConvexError("User not found");

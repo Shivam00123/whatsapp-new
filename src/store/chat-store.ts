@@ -9,6 +9,7 @@ export type Conversation = {
   name?: string;
   groupName?: string;
   groupImage?: string;
+  isOnline: boolean;
   admin?: Id<"users">;
   lastMessage?: {
     _id: Id<"messages">;
@@ -39,4 +40,5 @@ export interface IMessage {
   senderName: string;
   senderImage: string;
   senderIsOnline: boolean;
+  isOnline: boolean;
 }

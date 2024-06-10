@@ -89,6 +89,13 @@ const LeftPanel = () => {
             </p>
           </>
         )}
+        <p className="text-center text-gray-500 text-sm mt-3">Chat-gpt</p>
+        <p className="text-center text-gray-500 text-xs mt-3 ">
+          {`To ask AI your questions, send a message with the prefix "@gpt".`}
+        </p>
+        <p className="text-center text-gray-500 text-xs mt-3 ">
+          {`To generate AI images, send a message with the prefix "@dall-e".`}
+        </p>
       </div>
     </div>
   );

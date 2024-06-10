@@ -13,6 +13,8 @@ import { UserButton } from "@clerk/nextjs";
 import UserListDialog from "./user-list-dialog";
 import { Authenticated, useConvexAuth, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { useEffect } from "react";
+import { useConversationStore } from "@/store/chat-store";
 
 const LeftPanel = () => {
   const { isAuthenticated } = useConvexAuth();
@@ -20,6 +22,21 @@ const LeftPanel = () => {
     api.conversations.getConversations,
     isAuthenticated ? undefined : "skip"
   );
+  const { selectedConversations, setSelectedConversations } =
+    useConversationStore();
+
+  useEffect(() => {
+    const conversationIds = conversations?.map(
+      (conversation) => conversation._id
+    );
+    if (
+      selectedConversations &&
+      conversationIds &&
+      !conversationIds.includes(selectedConversations._id)
+    ) {
+      setSelectedConversations(null);
+    }
+  }, [conversations, selectedConversations, setSelectedConversations]);
 
   return (
     <div className="w-1/4 border-gray-600 border-r">

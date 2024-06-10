@@ -102,3 +102,41 @@ export const getConversations = query({
     return conversationDetails;
   },
 });
+
+export const kickUserFromGroup = mutation({
+  args: {
+    conversationId: v.id("conversations"),
+    userId: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new ConvexError("Unauthorized");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_tokenIdentifier", (q) =>
+        q.eq(
+          "tokenIdentifier",
+          identity.tokenIdentifier.replace("https://", "")
+        )
+      )
+      .unique();
+
+    if (!user) {
+      throw new ConvexError("User not found");
+    }
+
+    const conversation = await ctx.db
+      .query("conversations")
+      .filter((q) => q.eq(q.field("_id"), args.conversationId))
+      .unique();
+
+    if (conversation?.admin !== user._id) {
+      throw new ConvexError("Only admin is allowed to perform this action");
+    }
+    const participants = conversation.participants.filter(
+      (participant) => participant !== args.userId
+    );
+    await ctx.db.patch(conversation._id, { participants });
+  },
+});

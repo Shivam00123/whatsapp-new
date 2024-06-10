@@ -22,8 +22,6 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
   const minute = date.getMinutes().toString().padStart(2, "0");
   const time = `${hour}:${minute}`;
 
-  console.log({ message });
-
   const { selectedConversations } = useConversationStore();
   const isMember =
     selectedConversations?.participants.includes(message.senderID) || false;
@@ -58,7 +56,20 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
               <Bot size={16} className="absolute bottom-[2px] left-2" />
             )}
             {<ChatAvatarActions message={message} me={me} />}
-            <TextMessage message={message} />
+            {fromChatGPT && message.messageType !== "image" && (
+              <TextMessage message={message} />
+            )}
+            {!fromChatGPT && <TextMessage message={message} />}
+            {message.messageType === "image" && (
+              <ImageMessage
+                message={message}
+                handleClick={() => setOpen(true)}
+              />
+            )}
+            {message.messageType === "video" && (
+              <VideoMessage message={message} />
+            )}
+
             {open && (
               <ImageDialog
                 src={message.content}
@@ -82,19 +93,20 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
         >
           <SelfMessageIndicator />
           {message.messageType === "text" && <TextMessage message={message} />}
-          {message.messageType === "image" && (
+          {message.messageType === "image" && message?.content && (
             <ImageMessage message={message} handleClick={() => setOpen(true)} />
           )}
           {message.messageType === "video" && (
             <VideoMessage message={message} />
           )}
-          {open && (
+          {open && message?.content && (
             <ImageDialog
               src={message.content}
               open={open}
               onClose={() => setOpen(false)}
             />
           )}
+          {/* <LoadingImageDialog open={true} /> */}
           <MessageTime time={time} fromMe={fromMe} />
         </div>
       </div>
@@ -165,10 +177,11 @@ const ImageMessage = ({
   message: IMessage;
   handleClick: () => void;
 }) => {
+  console.log({ CONTENT: message });
   return (
     <div className="w-[250px] h-[250px] m-2 relative">
       <Image
-        src={message.content}
+        src={message?.content}
         fill
         className="cursor-pointer object-cover rounded"
         alt="image"

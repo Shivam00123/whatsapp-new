@@ -35,9 +35,35 @@ export const chat = action({
         content:
           messageContent ?? "I am sorry I don't understand this question",
         conversation: args.conversation,
+        messageType: "text",
       });
     } catch (error) {
       console.error("Error while calling OpenAI API:", error);
+    }
+  },
+});
+
+export const dall_e = action({
+  args: {
+    messageBody: v.string(),
+    conversation: v.id("conversations"),
+  },
+  handler: async (ctx, args) => {
+    try {
+      const res = await openai.images.generate({
+        model: "dall-e-3",
+        n: 1,
+        prompt: args.messageBody,
+        size: "1024x1024",
+      });
+      const imageUrl = res.data[0].url;
+      await ctx.runMutation(api.messages.sendChatGPTMessage, {
+        content: imageUrl ?? "/poopenai.png",
+        conversation: args.conversation,
+        messageType: "image",
+      });
+    } catch (error) {
+      throw new ConvexError("Something went wrong");
     }
   },
 });

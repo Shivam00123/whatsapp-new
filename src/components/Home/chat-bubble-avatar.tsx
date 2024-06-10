@@ -25,9 +25,9 @@ const ChatBubbleAvatar = ({
         src={
           message.senderImage
             ? message.senderImage
-            : fromChatGPT
+            : fromChatGPT && message.messageType === "text"
               ? "/gpt.png"
-              : ""
+              : "/dall-e.png"
         }
         className="rounded-full object-cover w-8 h-8"
       />

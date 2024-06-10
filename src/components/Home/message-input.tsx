@@ -27,6 +27,7 @@ const MessageInput = () => {
         sender: me?._id!,
         content: msgText,
       });
+
       setMsgText("");
     } catch (error) {
       toast.error("Something went wrong");

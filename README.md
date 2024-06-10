@@ -8,10 +8,7 @@ Welcome to the WhatsApp Clone project! This repository contains the source code 
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
+- [Preview](#preview)
 
 ## Introduction
 
@@ -60,5 +57,5 @@ To get started with the project locally, follow these steps:
    ```bash
    git clone https://github.com/yourusername/whatsapp-clone.git
    cd whatsapp-clone
-# Preview
+## Preview
   - Link : https://whatsapp-new-jade.vercel.app/

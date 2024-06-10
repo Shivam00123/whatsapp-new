@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# WhatsApp Clone Project
 
-## Getting Started
+Welcome to the WhatsApp Clone project! This repository contains the source code for a modern, full-stack WhatsApp clone built with the latest technologies.
 
-First, run the development server:
+## Table of Contents
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [Introduction](#introduction)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Introduction
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This project is a clone of WhatsApp, providing real-time messaging, video calling, and AI-powered features. It is built using Next.js and Shadcn for the frontend, with Convex powering the backend. Authentication is handled by Clerk, and state management is managed with Zustand. The project also integrates OpenAI's DALL-E for image generation and ChatGPT for query handling. Video calling functionality is powered by the Zego SDK.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Features
 
-## Learn More
+- Real-time messaging
+- Video calling
+- AI-generated images with DALL-E
+- AI-powered queries with ChatGPT
+- User authentication with Clerk
+- State management with Zustand
+- Deployed on Vercel
 
-To learn more about Next.js, take a look at the following resources:
+## Technologies Used
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Frontend:**
+  - Next.js
+  - Shadcn
+  - Luicide React for icons
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- **Backend:**
+  - Convex (with real-time functionality)
 
-## Deploy on Vercel
+- **Authentication:**
+  - Clerk
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **State Management:**
+  - Zustand
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **AI Integration:**
+  - OpenAI (DALL-E and ChatGPT)
+
+- **Video Calling:**
+  - Zego SDK
+
+- **Deployment:**
+  - Vercel
+
+## Installation
+
+To get started with the project locally, follow these steps:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/whatsapp-clone.git
+   cd whatsapp-clone
+# Preview
+  - Link : https://whatsapp-new-jade.vercel.app/

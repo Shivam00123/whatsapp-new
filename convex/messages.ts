@@ -47,6 +47,65 @@ export const sendTextMessage = mutation({
   },
 });
 
+export const sendMediaMessage = mutation({
+  args: {
+    conversation: v.id("conversations"),
+    sender: v.string(),
+    content: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new ConvexError("Unauthorized");
+
+    const conversation = await ctx.db
+      .query("conversations")
+      .filter((q) => q.eq(q.field("_id"), args.conversation))
+      .first();
+
+    if (!conversation) {
+      throw new ConvexError("Conversation not found");
+    }
+
+    let content = (await ctx.storage.getUrl(args.content)) as string;
+
+    await ctx.db.insert("messages", {
+      conversation: args.conversation,
+      sender: args.sender,
+      content,
+      messageType: "image",
+    });
+  },
+});
+export const sendVideoMessage = mutation({
+  args: {
+    conversation: v.id("conversations"),
+    sender: v.string(),
+    content: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new ConvexError("Unauthorized");
+
+    const conversation = await ctx.db
+      .query("conversations")
+      .filter((q) => q.eq(q.field("_id"), args.conversation))
+      .first();
+
+    if (!conversation) {
+      throw new ConvexError("Conversation not found");
+    }
+
+    let content = (await ctx.storage.getUrl(args.content)) as string;
+
+    await ctx.db.insert("messages", {
+      conversation: args.conversation,
+      sender: args.sender,
+      content,
+      messageType: "video",
+    });
+  },
+});
+
 export const getMessages = query({
   args: {
     conversationID: v.id("conversations"),

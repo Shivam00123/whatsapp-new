@@ -1,7 +1,11 @@
 import { MessageSeenSvg } from "@/lib/svgs";
 import { IMessage, useConversationStore } from "@/store/chat-store";
+import { Dialog, DialogContent, DialogDescription } from "../ui/dialog";
 import ChatBubbleAvatar from "./chat-bubble-avatar";
 import DateIndicator from "./date-indicator";
+import Image from "next/image";
+import ReactPlayer from "react-player";
+import { useState } from "react";
 
 type ChatBubbleProps = {
   message: IMessage;
@@ -10,6 +14,7 @@ type ChatBubbleProps = {
 };
 
 const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
+  const [open, setOpen] = useState(false);
   const date = new Date(message._creationTime);
   const hour = date.getHours().toString().padStart(2, "0");
   const minute = date.getMinutes().toString().padStart(2, "0");
@@ -38,6 +43,13 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
           >
             <OtherMessageIndicator />
             <TextMessage message={message} />
+            {open && (
+              <ImageDialog
+                src={message.content}
+                open={open}
+                onClose={() => setOpen(false)}
+              />
+            )}
             <MessageTime time={time} fromMe={fromMe} />
           </div>
         </div>
@@ -53,7 +65,20 @@ const ChatBubble = ({ me, message, previousMessage }: ChatBubbleProps) => {
           className={`flex  z-20 max-w-fit px-2 pt-1 rounded-md shadow-md ml-auto relative ${bgClass}`}
         >
           <SelfMessageIndicator />
-          <TextMessage message={message} />
+          {message.messageType === "text" && <TextMessage message={message} />}
+          {message.messageType === "image" && (
+            <ImageMessage message={message} handleClick={() => setOpen(true)} />
+          )}
+          {message.messageType === "video" && (
+            <VideoMessage message={message} />
+          )}
+          {open && (
+            <ImageDialog
+              src={message.content}
+              open={open}
+              onClose={() => setOpen(false)}
+            />
+          )}
           <MessageTime time={time} fromMe={fromMe} />
         </div>
       </div>
@@ -96,5 +121,67 @@ const TextMessage = ({ message }: { message: IMessage }) => {
         <p className={`mr-2 text-sm font-light`}>{message.content}</p>
       )}
     </div>
+  );
+};
+
+const VideoMessage = ({ message }: { message: IMessage }) => {
+  return (
+    <ReactPlayer
+      url={message.content}
+      width="250px"
+      height="250px"
+      controls={true}
+      light={true}
+    />
+  );
+};
+
+const ImageMessage = ({
+  message,
+  handleClick,
+}: {
+  message: IMessage;
+  handleClick: () => void;
+}) => {
+  return (
+    <div className="w-[250px] h-[250px] m-2 relative">
+      <Image
+        src={message.content}
+        fill
+        className="cursor-pointer object-cover rounded"
+        alt="image"
+        onClick={handleClick}
+      />
+    </div>
+  );
+};
+
+const ImageDialog = ({
+  src,
+  onClose,
+  open,
+}: {
+  open: boolean;
+  src: string;
+  onClose: () => void;
+}) => {
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) onClose();
+      }}
+    >
+      <DialogContent className="min-w-[750px]">
+        <DialogDescription className="relative h-[450px] flex justify-center">
+          <Image
+            src={src}
+            fill
+            className="rounded-lg object-contain"
+            alt="image"
+          />
+        </DialogDescription>
+      </DialogContent>
+    </Dialog>
   );
 };
